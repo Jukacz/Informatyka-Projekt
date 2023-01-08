@@ -9,13 +9,15 @@ import {
   ModalCloseButton,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import axios from "axios";
 const SignFileModal = ({ children }) => {
   const fileRef = useRef();
   const private_key_ref = useRef();
-  const sendFile = async () => {
-    const filesend = axios
+  const [link, setLink] = useState("");
+  const sendFile = async (e) => {
+    e.preventDefault();
+    const filesend = await axios
       .post(
         "/sign",
         {
@@ -29,9 +31,9 @@ const SignFileModal = ({ children }) => {
         }
       )
       .catch((err) => err.response);
-
     if (filesend.status === 200) {
       console.log(filesend.data);
+      setLink(filesend.data)
     }
   };
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -39,26 +41,37 @@ const SignFileModal = ({ children }) => {
     <>
       <div onClick={onOpen}>{children}</div>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} size="xl">
         <ModalOverlay />
         <ModalContent>
+          <form onSubmit={sendFile}>
           <ModalHeader>Modal Title</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
+            {!link ? (
+            <div className="sing-file-body-div">
             <p>Podaj swój prywatny klucz</p>
             <textarea ref={private_key_ref} />
             <p>Plik do Zapisania</p>
             <input type="file" ref={fileRef} />
+            </div>
+            ) : (
+              <div className="link-to-download-div">
+                <p>Link do pobrania pliku</p>
+                <a download href={link} className="link-to-download">{link}</a>
+              </div>
+            )}
           </ModalBody>
 
-          <ModalFooter>
-            <button colorScheme="blue" mr={3} onClick={onClose}>
+          <ModalFooter className="modal-footer">
+            <button type="button" onClick={onClose}>
               Close
             </button>
-            <button variant="ghost" onClick={() => sendFile()}>
+            <button type="submit">
               Secondary Action
             </button>
           </ModalFooter>
+          </form>
         </ModalContent>
       </Modal>
     </>

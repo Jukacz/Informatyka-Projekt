@@ -19,7 +19,8 @@ const ImportPublicKeysModal = ({ children }) => {
   const [result, setResult] = useState(false);
   const publicKeyString = useRef();
   const toast = useToast({ duration: 3000, isClosable: true });
-  const import_keys = async () => {
+  const import_keys = async (e) => {
+    e.preventDefault();
     const fetch_keys = await axios
       .post("/import-keys", {
         public_key: publicKeyString.current.value,
@@ -40,7 +41,8 @@ const ImportPublicKeysModal = ({ children }) => {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          <form onSubmit={import_keys}>
+          <ModalHeader>Importuj Klucze</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             {!result ? (
@@ -52,18 +54,20 @@ const ImportPublicKeysModal = ({ children }) => {
               <div className="success-div">
                 <FontAwesomeIcon icon={faCircleCheck} />
                 <h5>Udało sie zaimportować</h5>
+                <p>Niewiedzialem co z tym faktem zrobic, wiec pozostawiam tą infomacje {":)"}</p>
               </div>
             )}
           </ModalBody>
 
-          <ModalFooter>
-            <button colorScheme="blue" mr={3} onClick={onClose}>
+          <ModalFooter className="modal-footer">
+            <button onClick={onClose} type="button">
               Close
             </button>
-            <button variant="ghost" onClick={() => import_keys()}>
-              Secondary Action
+            <button variant="ghost" type="submit">
+              Importuj
             </button>
           </ModalFooter>
+          </form>
         </ModalContent>
       </Modal>
     </>

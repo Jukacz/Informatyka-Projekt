@@ -1,0 +1,52 @@
+.modal-footer {
+    display: flex;
+    gap: 10px;
+    button {
+        background-color: rgb(58, 58, 255);
+        color: white;
+        padding: 10px;
+        border-radius: 10px;
+    }
+}
+
+.sing-file-body-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    p {
+        font-size: 14px;
+        font-weight: 500;
+    }
+    textarea {
+        border: 1px solid #ccc;
+        min-height: 200px;
+        max-height: 200px;
+        width: 300px;
+        overflow: auto;
+    }
+    input {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 5px;
+        font-size: 14px;
+    }
+}
+.link-to-download-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    p {
+        font-size: 14px;
+        font-weight: 500;
+    }
+    .link-to-download {
+        color: rgb(58, 58, 255);
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+}

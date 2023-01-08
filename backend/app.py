@@ -5,7 +5,7 @@ from Crypto.Hash import SHA256
 from configuration import *
 from flask import request, jsonify
 import os
-
+import uuid
 
 @app.route("/", methods=["GET"])
 def ok():
@@ -28,13 +28,13 @@ def my_profile():
 
 @app.route("/sign", methods=['POST'])
 def sign():
-    message = request.files['file']
+    file = request.files['file']
     private_key = request.form['private_key']
-    nameOfFile = message.filename + ".sig"
-    message.save(os.path.join(app.config["UPLOAD_FOLDER"], nameOfFile))
-    message = open(os.path.join(app.config["UPLOAD_FOLDER"], nameOfFile), 'r').read()
+    nameOfFile = uuid.uuid4().hex + ".sig"
+    file.save(os.path.join(app.config["UPLOAD_FOLDER"], nameOfFile))
+    file = open(os.path.join(app.config["UPLOAD_FOLDER"], nameOfFile), 'r').read()
     key = RSA.import_key(private_key)
-    hash = SHA256.new(message.encode())
+    hash = SHA256.new(file.encode())
     signature = PKCS115_SigScheme(key).sign(hash)
     file = open(os.path.join(app.config["UPLOAD_FOLDER"], nameOfFile), 'wb')
     file.write(signature)
@@ -82,5 +82,3 @@ def import_keys():
     return jsonify(response_body)
 
 
-if __name__ == "__main__":
-    app.run(debug=True)
