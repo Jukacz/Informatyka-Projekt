@@ -1,34 +1,51 @@
 .CreateKeysModal-container {
-    .modal-body {
-        h5 {
-            text-align: center;
-            font-weight: 900;
-            font-size: 25px;
-        }
-
-        .box-with-keys {
-
-            h6 {
-                margin: 10px;
-            }
-
-            div {
-                display: flex;
-                flex-direction: column;
-                padding: 20px;
-                background-color: rgb(202, 202, 202);
-                border-radius: 10px;
-                border: 1px solid black;
-
-                p {
-                    text-align: center;
-                    word-wrap: break-word;
-                }
-
-                button {
-                    align-self: flex-end;
-                }
-            }
-        }
+  .modal-body {
+    width: auto;
+    h5 {
+      text-align: center;
+      font-weight: 900;
+      font-size: 25px;
     }
+    .flex-box-div {
+      display: flex;
+      gap: 20px;
+      .box-with-keys {
+        h6 {
+          margin: 10px;
+        }
+
+        div {
+          display: flex;
+          flex-direction: column;
+          padding: 20px;
+          background-color: rgb(202, 202, 202);
+          border-radius: 10px;
+          border: 1px solid black;
+          width: 540px;
+          max-height: 500px;
+          overflow: auto;
+
+          p {
+            text-align: center;
+            word-wrap: break-word;
+          }
+
+          button {
+            align-self: flex-end;
+          }
+        }
+      }
+    }
+  }
+
+  .modal-footer {
+    display: flex;
+    gap: 20px;
+
+    .button-footer {
+      padding: 10px;
+      background-color: rgb(82, 82, 255);
+      color: white;
+    }
+  }
 }

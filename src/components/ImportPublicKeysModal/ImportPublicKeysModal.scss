@@ -1,0 +1,16 @@
+.success-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    height: 100px;
+    width: 100px;
+    color: rgb(0, 214, 0);
+  }
+  h5 {
+    font-size: 25px;
+    font-weight: 900;
+  }
+}

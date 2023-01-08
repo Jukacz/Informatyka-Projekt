@@ -1,6 +1,9 @@
+import Loader from "./Loader/Loader";
+import CopyTextButton from "./CopyTextButton/CopyTextButton";
 import CreateKeysModal from "./CreateKeysModal/CreateKeysModal";
 import ImportPublicKeysModal from "./ImportPublicKeysModal/ImportPublicKeysModal";
-import Loader from "./Loader/Loader";
 import TransitionAnimate from "./Transition/TransitionAnimate";
-import CopyTextButton from "./CopyTextButton/CopyTextButton";
-export { CreateKeysModal, ImportPublicKeysModal, Loader, TransitionAnimate, CopyTextButton }
+import VerifySignOfFile from "./VerifySignOfFileModal/VerifySignOfFile";
+import SignFileModal from "./SignFileModal/SignFileModal";
+
+export { CreateKeysModal, ImportPublicKeysModal, Loader, TransitionAnimate, CopyTextButton, VerifySignOfFile, SignFileModal  }
