@@ -7,6 +7,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = "df0331cefc6c2b9a5d0208a726a5d1c0fd37324feba25506"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 app.config['UPLOAD_FOLDER'] = 'static/files'
+# user can download files from this folder
 CORS(app)
 db = SQLAlchemy(app)
 login_manager = LoginManager()

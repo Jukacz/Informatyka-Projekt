@@ -1,9 +1,9 @@
 # Tomasz Ogrodnik - Napisz program, który tworzy klucze dowolnym sposobem asymetrycznie oraz ma możliwość zaimportowania kluczy publicznych. Program również ma możliwość podpisania oraz sprawdzenia podpisu
 from Crypto.PublicKey import RSA
-from Crypto.Signature import pkcs1_15
-from hashlib import sha256
+from Crypto.Signature.pkcs1_15 import PKCS115_SigScheme
+from Crypto.Hash import SHA256
 from configuration import *
-from flask import Flask, request, jsonify, send_file
+from flask import request, jsonify
 import os
 
 
@@ -28,43 +28,57 @@ def my_profile():
 
 @app.route("/sign", methods=['POST'])
 def sign():
-    # sign a sended file
     message = request.files['file']
     private_key = request.form['private_key']
-    nameOfFile = message.filename
+    nameOfFile = message.filename + ".sig"
     message.save(os.path.join(app.config["UPLOAD_FOLDER"], nameOfFile))
-    message = open(os.path.join(
-        app.config["UPLOAD_FOLDER"], nameOfFile), 'r').read()
+    message = open(os.path.join(app.config["UPLOAD_FOLDER"], nameOfFile), 'r').read()
     key = RSA.import_key(private_key)
-    digest = sha256(message.encode('utf-8'))
-    signature = pkcs1_15.new(key).sign(digest).hex()
-    file = open(os.path.join(app.config["UPLOAD_FOLDER"], nameOfFile), 'w')
+    hash = SHA256.new(message.encode())
+    signature = PKCS115_SigScheme(key).sign(hash)
+    file = open(os.path.join(app.config["UPLOAD_FOLDER"], nameOfFile), 'wb')
     file.write(signature)
     file.close()
     file = open(os.path.join(app.config["UPLOAD_FOLDER"], nameOfFile), 'rb')
-    return send_file(file, attachment_filename='signedFile.sig')
-
+    return "http://127.0.0.1:5000/static/files/" + nameOfFile
 
 @app.route("/verify", methods=['GET', 'POST'])
 def verify():
-    message = request.args.get('message')
-    signature = request.args.get('signature')
-    public_key = request.args.get('public_key')
+    file = request.files['signature_file']
+    original_file = request.files['original_file']
+    public_key = request.form['public_key']
+    nameOfFile = file.filename
+    original_file_name = original_file.filename
+    file.save(os.path.join(app.config["UPLOAD_FOLDER"], nameOfFile))
+    file = open(os.path.join(app.config["UPLOAD_FOLDER"], nameOfFile), 'rb')
+    signature = file.read()
+    original_file.save(os.path.join(app.config["UPLOAD_FOLDER"], original_file.filename))
+    original_file = open(os.path.join(app.config["UPLOAD_FOLDER"], original_file.filename), 'rb').read()
     key = RSA.import_key(public_key)
-    verified = key.verify(message.encode('utf-8'), signature)
-    response_body = {
-        'verified': verified
-    }
-    return jsonify(response_body, 200)
+    hash = SHA256.new(original_file)
+    try:
+        PKCS115_SigScheme(key).verify(hash, signature)
+        os.remove(os.path.join(app.config["UPLOAD_FOLDER"], nameOfFile))
+        os.remove(os.path.join(app.config["UPLOAD_FOLDER"], original_file_name))
+        return "Podpis jest poprawny"
+    except (ValueError, TypeError):
+        os.remove(os.path.join(app.config["UPLOAD_FOLDER"], nameOfFile))
+        os.remove(os.path.join(app.config["UPLOAD_FOLDER"], original_file_name))
+        return "Podpis jest niepoprawny"
 
 
 @app.route("/import-keys", methods=['POST'])
 def import_keys():
     public_key = request.json["public_key"]
-    key = RSA.import_key(public_key)
-    response_body = {
-        "status": "success"
-    }
+    try:
+        RSA.import_key(public_key)
+        response_body = {
+            "status": "success"
+        }
+    except (ValueError, TypeError):
+        response_body = {
+            "status": "error"
+        }
     return jsonify(response_body)
 
 
