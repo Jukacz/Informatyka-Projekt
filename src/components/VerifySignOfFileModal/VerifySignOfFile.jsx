@@ -9,7 +9,7 @@ import {
   ModalCloseButton,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 const VerifySignOfFile = ({ children }) => {
   const public_keyRef = useRef();
@@ -33,6 +33,12 @@ const VerifySignOfFile = ({ children }) => {
     }
   }
 
+  useEffect(() => {
+    if (!isOpen) {
+      console.log("fajnie")
+      setResult("");
+    }
+  }, [isOpen])
 
   return (
     <>

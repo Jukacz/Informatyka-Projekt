@@ -9,12 +9,13 @@ import {
   ModalCloseButton,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 const SignFileModal = ({ children }) => {
   const fileRef = useRef();
   const private_key_ref = useRef();
   const [link, setLink] = useState("");
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const sendFile = async (e) => {
     e.preventDefault();
     const filesend = await axios
@@ -36,7 +37,12 @@ const SignFileModal = ({ children }) => {
       setLink(filesend.data)
     }
   };
-  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  useEffect(() => {
+    if (isOpen) {
+      setLink("");
+    }
+  }, [isOpen])
   return (
     <>
       <div onClick={onOpen}>{children}</div>

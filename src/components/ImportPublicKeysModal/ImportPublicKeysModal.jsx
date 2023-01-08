@@ -10,7 +10,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
@@ -33,7 +33,11 @@ const ImportPublicKeysModal = ({ children }) => {
     }
     toast({ title: "nie podales prawidlowego kluzca", status: "error" });
   };
-
+  useEffect(() => {
+    if (isOpen) {
+      setResult(false);
+    }
+  }, [isOpen])
   return (
     <>
       <button onClick={onOpen}>{children}</button>
@@ -67,7 +71,7 @@ const ImportPublicKeysModal = ({ children }) => {
               Importuj
             </button>
           </ModalFooter>
-          </form>
+          </form> 
         </ModalContent>
       </Modal>
     </>
