@@ -8,5 +8,7 @@
  
  1. Pobieramy plik ZIP z githuba
  2. nastepnie w katalogu folderu z projektem wpisujemy "npm i"
- 3. kiedy operacja sie skończy, wchodzimy do katalogu backend
- 4. Wpisujemy "flask run" (oczywiscie aby to zadziałało trzeba miec pobranego flaska ;) )
+ 3. kiedy operacja sie skończy, wpisujemy "npm start" 
+ 4. kiedy operacja sie skończy, wchodzimy do katalogu /backend
+ 5. Wpisujemy "flask run" (oczywiscie aby to zadziałało trzeba miec pobranego flaska ;) )
+ 6. Gotowe! 
