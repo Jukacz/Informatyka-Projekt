@@ -31,13 +31,13 @@ const ImportPublicKeysModal = ({ children }) => {
       setResult(true);
       return;
     }
-    toast({ title: "nie podales prawidlowego kluzca", status: "error" });
+    toast({ title: fetch_keys.data.data, status: "error" });
   };
   useEffect(() => {
     if (isOpen) {
       setResult(false);
     }
-  }, [isOpen])
+  }, [isOpen]);
   return (
     <>
       <button onClick={onOpen}>{children}</button>
@@ -46,32 +46,35 @@ const ImportPublicKeysModal = ({ children }) => {
         <ModalOverlay />
         <ModalContent>
           <form onSubmit={import_keys}>
-          <ModalHeader>Importuj Klucze</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            {!result ? (
-              <div className="input-group">
-                <p>Podaj Klucz Publiczny: </p>
-                <textarea type="text" ref={publicKeyString}></textarea>
-              </div>
-            ) : (
-              <div className="success-div">
-                <FontAwesomeIcon icon={faCircleCheck} />
-                <h5>Udało sie zaimportować</h5>
-                <p>Niewiedzialem co z tym faktem zrobic, wiec pozostawiam tą infomacje {":)"}</p>
-              </div>
-            )}
-          </ModalBody>
+            <ModalHeader>Importuj Klucze</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              {!result ? (
+                <div className="input-group">
+                  <p>Podaj Klucz Publiczny: </p>
+                  <textarea type="text" ref={publicKeyString}></textarea>
+                </div>
+              ) : (
+                <div className="success-div">
+                  <FontAwesomeIcon icon={faCircleCheck} />
+                  <h5>Udało sie zaimportować</h5>
+                  <p>
+                    Niewiedzialem co z tym faktem zrobic, wiec pozostawiam tą
+                    infomacje {":)"}
+                  </p>
+                </div>
+              )}
+            </ModalBody>
 
-          <ModalFooter className="modal-footer">
-            <button onClick={onClose} type="button">
-              Close
-            </button>
-            <button variant="ghost" type="submit">
-              Importuj
-            </button>
-          </ModalFooter>
-          </form> 
+            <ModalFooter className="modal-footer">
+              <button onClick={onClose} type="button">
+                Close
+              </button>
+              <button variant="ghost" type="submit">
+                Importuj
+              </button>
+            </ModalFooter>
+          </form>
         </ModalContent>
       </Modal>
     </>

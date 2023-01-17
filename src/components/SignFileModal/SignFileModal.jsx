@@ -8,12 +8,15 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
+  useToast,
+  Toast,
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 const SignFileModal = ({ children }) => {
   const fileRef = useRef();
   const private_key_ref = useRef();
+  const toast = useToast({ duration: 3000, isClosable: true });
   const [link, setLink] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const sendFile = async (e) => {
@@ -32,17 +35,19 @@ const SignFileModal = ({ children }) => {
         }
       )
       .catch((err) => err.response);
-    if (filesend.status === 200) {
-      console.log(filesend.data);
-      setLink(filesend.data)
+    if (filesend.status === 200 && filesend.data.status === "success") {
+      setLink(filesend.data.data);
+      return;
     }
+    console.log(filesend.data);
+    toast({ title: filesend.data.data, status: "error" });
   };
 
   useEffect(() => {
     if (isOpen) {
       setLink("");
     }
-  }, [isOpen])
+  }, [isOpen]);
   return (
     <>
       <div onClick={onOpen}>{children}</div>
@@ -51,32 +56,32 @@ const SignFileModal = ({ children }) => {
         <ModalOverlay />
         <ModalContent>
           <form onSubmit={sendFile}>
-          <ModalHeader>Modal Title</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            {!link ? (
-            <div className="sing-file-body-div">
-            <p>Podaj swój prywatny klucz</p>
-            <textarea ref={private_key_ref} />
-            <p>Plik do Zapisania</p>
-            <input type="file" ref={fileRef} />
-            </div>
-            ) : (
-              <div className="link-to-download-div">
-                <p>Link do pobrania pliku</p>
-                <a download href={link} className="link-to-download">{link}</a>
-              </div>
-            )}
-          </ModalBody>
+            <ModalHeader>Modal Title</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              {!link ? (
+                <div className="sing-file-body-div">
+                  <p>Podaj swój prywatny klucz</p>
+                  <textarea ref={private_key_ref} />
+                  <p>Plik do Zapisania</p>
+                  <input type="file" ref={fileRef} />
+                </div>
+              ) : (
+                <div className="link-to-download-div">
+                  <p>Link do pobrania pliku</p>
+                  <a download href={link} className="link-to-download">
+                    {link}
+                  </a>
+                </div>
+              )}
+            </ModalBody>
 
-          <ModalFooter className="modal-footer">
-            <button type="button" onClick={onClose}>
-              Close
-            </button>
-            <button type="submit">
-              Secondary Action
-            </button>
-          </ModalFooter>
+            <ModalFooter className="modal-footer">
+              <button type="button" onClick={onClose}>
+                Close
+              </button>
+              <button type="submit">Secondary Action</button>
+            </ModalFooter>
           </form>
         </ModalContent>
       </Modal>
